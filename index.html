@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RedDrop — Secure File Download</title>
+<style>
+:root{--red:#e32636;--red-dark:#c7192a;--ink:#202124;--muted:#7b8088;--line:#e8e8eb;--bg:#f7f7f8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+.top{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100% - 1050px)/2))}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.5px}.logo{width:34px;height:34px;border-radius:9px;background:var(--red);display:grid;place-items:center;color:white;font-weight:900}
+.tag{font-size:12px;color:var(--muted);font-weight:600}
+main{min-height:calc(100vh - 130px);display:grid;place-items:center;padding:40px 18px}
+.card{width:min(100%,560px);background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 32px #1616160b;overflow:hidden}
+.inner{padding:38px 38px 30px;text-align:center}
+h1{font-size:25px;line-height:1.2;margin:4px 0 8px;letter-spacing:-.7px}.sub{color:var(--muted);margin:0 0 28px}
+.file{border:1px solid var(--line);background:#fcfcfd;border-radius:14px;padding:18px;display:flex;align-items:center;gap:15px;text-align:left}
+.fileicon{width:48px;height:54px;border-radius:9px;background:#ffeff0;color:var(--red);display:grid;place-items:center;flex:none}
+.fileicon svg{width:25px;height:25px}.filename{font-weight:750;overflow-wrap:anywhere}.meta{font-size:13px;color:var(--muted);margin-top:3px}.size{margin-left:auto;white-space:nowrap;border:1px solid var(--line);border-radius:9px;padding:5px 9px;font-size:12px;color:#4b5057;background:#fff}
+.pw{display:inline-flex;align-items:center;gap:8px;background:#fff0f1;color:var(--red-dark);border-radius:30px;padding:8px 13px;margin:18px 0 0;font-weight:700;font-size:13px}
+.download{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:25px;padding:15px 18px;background:var(--red);color:#fff;text-decoration:none;border:0;border-radius:10px;font-size:16px;font-weight:750;cursor:pointer;transition:.15s}
+.download:hover{background:var(--red-dark);transform:translateY(-1px)}.download.disabled{opacity:.45;pointer-events:none}
+.hint{font-size:12px;color:var(--muted);margin:12px 0 0}
+.foot{border-top:1px solid var(--line);background:#fdfdfd;padding:18px 24px;display:flex;justify-content:center;gap:22px;color:var(--muted);font-size:12px}
+.admin{width:min(100%,560px);margin:18px auto 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}
+.admin h2{font-size:16px;margin:0 0 12px}.admin p{font-size:12px;color:var(--muted);margin:0 0 14px}
+label{display:block;font-size:12px;font-weight:700;margin:12px 0 5px;color:#555b63}input{width:100%;padding:11px 12px;border:1px solid #dfe1e5;border-radius:8px;font:inherit;font-size:14px}
+.smallbtn{margin-top:13px;background:#24272c;color:#fff;border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
+.notice{font-size:12px;color:#7b4d00;background:#fff8e8;border:1px solid #f1dfb6;padding:11px 12px;border-radius:9px;margin-top:13px}
+@media(max-width:520px){.inner{padding:30px 20px 25px}.top{padding:0 17px}.tag{display:none}.size{font-size:11px;padding:4px 6px}.file{padding:13px;gap:10px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><span class="logo">R</span> RedDrop</div><span class="tag">SIMPLE FILE SHARING</span></header>
+<main><div>
+<section class="card">
+<div class="inner">
+<h1>Your file is ready</h1>
+<p class="sub">A file has been shared with you</p>
+<div class="file">
+<div class="fileicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z"/><path d="M14 3.5v5h5M8 13h8M8 16.5h8"/></svg></div>
+<div style="min-width:0"><div class="filename" id="filename">Your-video.mp4</div><div class="meta" id="filetype">Video file</div></div>
+<div class="size" id="filesize">—</div>
+</div>
+<div id="passwordWrap" class="pw" hidden><span>🔒</span><span id="passwordText">Password shared separately</span></div>
+<a id="download" class="download disabled" href="#" rel="noopener" download>
+<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg>
+Download file
+</a>
+<p class="hint">Only download files you trust.</p>
+</div>
+<div class="foot"><span>RedDrop</span><span>Simple sharing page</span></div>
+</section>
+<section class="admin">
+<h2>Set up this download page</h2>
+<p>Enter your file details and a direct download URL, then create a shareable page link.</p>
+<label for="name">File name</label><input id="name" value="Your-video.mp4" placeholder="Example: Holiday-video.mp4">
+<label for="size">File size</label><input id="size" placeholder="Example: 250 MB">
+<label for="url">Direct download URL</label><input id="url" type="url" placeholder="https://...">
+<label for="pwinput">Password note (optional)</label><input id="pwinput" placeholder="Example: Ask the sender for the password">
+<button class="smallbtn" id="make">Create share link</button>
+<div class="notice"><b>Password safety:</b> This page is a design/template only. It does not securely protect files or store uploads. Use your storage provider's own password/permission controls, and share passwords separately.</div>
+<p id="result" style="margin-top:12px;overflow-wrap:anywhere"></p>
+</section>
+</div></main>
+<script>
+const q=new URLSearchParams(location.search);
+function show(){
+ const n=q.get('name'),s=q.get('size'),u=q.get('url'),p=q.get('note');
+ if(n)document.getElementById('filename').textContent=n;
+ if(s)document.getElementById('filesize').textContent=s;
+ if(p){document.getElementById('passwordWrap').hidden=false;document.getElementById('passwordText').textContent=p;}
+ if(u){try{const parsed=new URL(u);if(parsed.protocol==='https:'||parsed.protocol==='http:'){const a=document.getElementById('download');a.href=parsed.href;a.classList.remove('disabled');}}catch(e){}}
+ const ext=(n||'').split('.').pop().toLowerCase();
+ document.getElementById('filetype').textContent=['mp4','mov','mkv','webm'].includes(ext)?'Video file':ext==='zip'?'ZIP archive':'Shared file';
+}
+show();
+document.getElementById('make').addEventListener('click',()=>{
+ const name=document.getElementById('name').value.trim()||'Shared-file';
+ const size=document.getElementById('size').value.trim();
+ const url=document.getElementById('url').value.trim();
+ const note=document.getElementById('pwinput').value.trim();
+ try{const parsed=new URL(url);if(!['https:','http:'].includes(parsed.protocol))throw 0;}catch(e){document.getElementById('result').textContent='Please enter a valid http(s) download URL.';return;}
+ const link=new URL(location.href);link.search='';link.searchParams.set('name',name);if(size)link.searchParams.set('size',size);link.searchParams.set('url',url);if(note)link.searchParams.set('note',note);
+ const out=document.getElementById('result');out.textContent=link.href;
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(link.href).then(()=>{out.textContent='Copied share link: '+link.href;}).catch(()=>{});
+});
+</script>
+</body>
+</html>
